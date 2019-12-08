@@ -24,6 +24,15 @@ class App extends Component {
     super(props);
     this.state = { list };
   }
+
+  onDismiss = id => {
+    const idToDelete = item => {
+      return item.objectID !== id;
+    };
+    const updatedList = this.state.list.filter(idToDelete);
+    this.setState({ list: updatedList });
+  };
+
   render() {
     return (
       <div className="App">
@@ -44,6 +53,14 @@ class App extends Component {
                   <td>{item.author}</td>
                   <td>{item.num_comments}</td>
                   <td>{item.points}</td>
+                  <td>
+                    <button
+                      type="button"
+                      onClick={() => this.onDismiss(item.objectID)}
+                    >
+                      Dismiss
+                    </button>
+                  </td>
                 </tr>
               );
             })}
