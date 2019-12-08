@@ -20,6 +20,10 @@ const list = [
 ];
 
 class App extends Component {
+  constructor(props) {
+    super(props);
+    this.state = { list };
+  }
   render() {
     return (
       <div className="App">
@@ -32,7 +36,7 @@ class App extends Component {
             <th>Points</th>
           </thead>
           <tbody>
-            {list.map(item => {
+            {this.state.list.map(item => {
               return (
                 <tr key={item.objectID}>
                   <td>{item.objectID}</td>
