@@ -19,8 +19,6 @@ class App extends Component {
     const idToDelete = item => {
       return item.objectID !== id;
     };
-    // const updatedList = this.state.list.filter(idToDelete);
-    // this.setState({ list: updatedList });
 
     const updatedHits = this.state.result.hits.filter(idToDelete);
     this.setState({ result: { ...this.state.result, hits: updatedHits } });
@@ -40,15 +38,16 @@ class App extends Component {
   }
   render() {
     const { searchTerm, result } = this.state;
-    if (!result) return null;
+    
     return (
       <div className="App">
         <Search searchTerm={searchTerm} onSearchChange={this.onSearchChange} />
-        <Table
+        {result && <Table
           searchTerm={searchTerm}
           list={result.hits}
           onDismiss={this.onDismiss}
-        />
+        />}
+        
       </div>
     );
   }
