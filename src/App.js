@@ -1,24 +1,5 @@
 import React, { Component } from "react";
 
-const list = [
-  {
-    title: "React",
-    url: "https://facebook.github.io/react",
-    author: "Jordan Walke",
-    num_comments: 3,
-    points: 4,
-    objectID: 0
-  },
-  {
-    title: "Redux",
-    url: "https://github.com/reactjs/redux",
-    author: "Dan Abramov, Andrew Clark",
-    num_comments: 2,
-    points: 5,
-    objectID: 1
-  }
-];
-
 /**Search function that returns ONLY the searched term in the list */
 const isSearched = searchTerm => item =>
   item.title.toLowerCase().includes(searchTerm.toLowerCase());
@@ -26,29 +7,48 @@ const isSearched = searchTerm => item =>
 class App extends Component {
   constructor(props) {
     super(props);
-    this.state = { list, searchTerm: "" };
+    this.state = { result: null, searchTerm: "javascript" };
   }
+
+  setSearchTopStories = result => {
+    this.setState({ result });
+  };
 
   /**Dismiss expression to delete a list item */
   onDismiss = id => {
     const idToDelete = item => {
       return item.objectID !== id;
     };
-    const updatedList = this.state.list.filter(idToDelete);
-    this.setState({ list: updatedList });
+    // const updatedList = this.state.list.filter(idToDelete);
+    // this.setState({ list: updatedList });
+
+    const updatedHits = this.state.result.hits.filter(idToDelete);
+    this.setState({ result: { ...this.state.result, hits: updatedHits } });
   };
 
   /** OnChange handler for the input field */
   onSearchChange = event => {
     this.setState({ searchTerm: event.target.value });
   };
-
+  componentDidMount() {
+    const { searchTerm } = this.state;
+    const url = `https://hn.algolia.com/api/v1/search?query=${searchTerm}`;
+    fetch(url)
+      .then(response => response.json())
+      .then(result => this.setSearchTopStories(result))
+      .catch(error => error);
+  }
   render() {
-    const { searchTerm, list } = this.state;
+    const { searchTerm, result } = this.state;
+    if (!result) return null;
     return (
       <div className="App">
         <Search searchTerm={searchTerm} onSearchChange={this.onSearchChange} />
-        <Table searchTerm={searchTerm} list={list} onDismiss={this.onDismiss} />
+        <Table
+          searchTerm={searchTerm}
+          list={result.hits}
+          onDismiss={this.onDismiss}
+        />
       </div>
     );
   }
@@ -93,11 +93,13 @@ class TableHead extends Component {
   render() {
     return (
       <thead>
-        <th>ID</th>
-        <th>Title</th>
-        <th>Author</th>
-        <th>Comments</th>
-        <th>Points</th>
+        <tr>
+          <th>ID</th>
+          <th>Title</th>
+          <th>Author</th>
+          <th>Comments</th>
+          <th>Points</th>
+        </tr>
       </thead>
     );
   }
