@@ -47,48 +47,95 @@ class App extends Component {
     const { searchTerm, list } = this.state;
     return (
       <div className="App">
-        <div className="form">
-          <form>
-            <input
-              type="text"
-              onChange={this.onSearchChange}
-              value={searchTerm}
-            ></input>
-          </form>
-        </div>
-        <div className="table">
-          <table>
-            <thead>
-              <th>ID</th>
-              <th>Title</th>
-              <th>Author</th>
-              <th>Comments</th>
-              <th>Points</th>
-            </thead>
-            <tbody>
-              {list.filter(isSearched(searchTerm)).map(item => {
-                return (
-                  <tr key={item.objectID}>
-                    <td>{item.objectID}</td>
-                    <td>{item.title}</td>
-                    <td>{item.author}</td>
-                    <td>{item.num_comments}</td>
-                    <td>{item.points}</td>
-                    <td>
-                      <button
-                        type="button"
-                        onClick={() => this.onDismiss(item.objectID)}
-                      >
-                        Dismiss
-                      </button>
-                    </td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
-        </div>
+        <Search searchTerm={searchTerm} onSearchChange={this.onSearchChange} />
+        <Table searchTerm={searchTerm} list={list} onDismiss={this.onDismiss} />
       </div>
+    );
+  }
+}
+
+class Search extends Component {
+  render() {
+    const { searchTerm, onSearchChange } = this.props;
+    return (
+      <div className="form">
+        <form>
+          <input
+            type="text"
+            onChange={onSearchChange}
+            value={searchTerm}
+          ></input>
+        </form>
+      </div>
+    );
+  }
+}
+
+class Table extends Component {
+  render() {
+    const { searchTerm, list, onDismiss } = this.props;
+    return (
+      <div className="table">
+        <table>
+          <TableHead />
+          <TableBody
+            searchTerm={searchTerm}
+            list={list}
+            onDismiss={onDismiss}
+          />
+        </table>
+      </div>
+    );
+  }
+}
+
+class TableHead extends Component {
+  render() {
+    return (
+      <thead>
+        <th>ID</th>
+        <th>Title</th>
+        <th>Author</th>
+        <th>Comments</th>
+        <th>Points</th>
+      </thead>
+    );
+  }
+}
+
+class TableBody extends Component {
+  render() {
+    const { searchTerm, list, onDismiss } = this.props;
+    return (
+      <tbody>
+        {list.filter(isSearched(searchTerm)).map(item => {
+          return (
+            <tr key={item.objectID}>
+              <td>{item.objectID}</td>
+              <td>{item.title}</td>
+              <td>{item.author}</td>
+              <td>{item.num_comments}</td>
+              <td>{item.points}</td>
+              <td>
+                <Button onClick={() => onDismiss(item.objectID)}>
+                  Dismiss
+                </Button>
+              </td>
+            </tr>
+          );
+        })}
+      </tbody>
+    );
+  }
+}
+
+class Button extends Component {
+  render() {
+    const { onClick, children } = this.props;
+    return (
+      <button type="button" onClick={onClick}>
+        {children}
+      </button>
     );
   }
 }
