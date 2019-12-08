@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import axios from "axios";
 
 class App extends Component {
   constructor(props) {
@@ -30,9 +31,8 @@ class App extends Component {
 
   fetchSearchTopStories = (searchTerm, page = 0) => {
     const url = `https://hn.algolia.com/api/v1/search?query=${searchTerm}&page=${page}&hitsPerPage=${100}`;
-    fetch(url)
-      .then(response => response.json())
-      .then(result => this.setSearchTopStories(result))
+    axios(url)
+      .then(result => this.setSearchTopStories(result.data))
       .catch(error => error);
   };
   onSearchSubmit = event => {
