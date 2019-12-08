@@ -19,12 +19,17 @@ const list = [
   }
 ];
 
+/**Search function that returns ONLY the searched term in the list */
+const isSearched = searchTerm => item =>
+  item.title.toLowerCase().includes(searchTerm.toLowerCase());
+
 class App extends Component {
   constructor(props) {
     super(props);
-    this.state = { list };
+    this.state = { list, searchTerm: "" };
   }
 
+  /**Dismiss expression to delete a list item */
   onDismiss = id => {
     const idToDelete = item => {
       return item.objectID !== id;
@@ -33,39 +38,56 @@ class App extends Component {
     this.setState({ list: updatedList });
   };
 
+  /** OnChange handler for the input field */
+  onSearchChange = event => {
+    this.setState({ searchTerm: event.target.value });
+  };
+
   render() {
+    const { searchTerm, list } = this.state;
     return (
       <div className="App">
-        <table>
-          <thead>
-            <th>ID</th>
-            <th>Title</th>
-            <th>Author</th>
-            <th>Comments</th>
-            <th>Points</th>
-          </thead>
-          <tbody>
-            {this.state.list.map(item => {
-              return (
-                <tr key={item.objectID}>
-                  <td>{item.objectID}</td>
-                  <td>{item.title}</td>
-                  <td>{item.author}</td>
-                  <td>{item.num_comments}</td>
-                  <td>{item.points}</td>
-                  <td>
-                    <button
-                      type="button"
-                      onClick={() => this.onDismiss(item.objectID)}
-                    >
-                      Dismiss
-                    </button>
-                  </td>
-                </tr>
-              );
-            })}
-          </tbody>
-        </table>
+        <div className="form">
+          <form>
+            <input
+              type="text"
+              onChange={this.onSearchChange}
+              value={searchTerm}
+            ></input>
+          </form>
+        </div>
+        <div className="table">
+          <table>
+            <thead>
+              <th>ID</th>
+              <th>Title</th>
+              <th>Author</th>
+              <th>Comments</th>
+              <th>Points</th>
+            </thead>
+            <tbody>
+              {list.filter(isSearched(searchTerm)).map(item => {
+                return (
+                  <tr key={item.objectID}>
+                    <td>{item.objectID}</td>
+                    <td>{item.title}</td>
+                    <td>{item.author}</td>
+                    <td>{item.num_comments}</td>
+                    <td>{item.points}</td>
+                    <td>
+                      <button
+                        type="button"
+                        onClick={() => this.onDismiss(item.objectID)}
+                      >
+                        Dismiss
+                      </button>
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        </div>
       </div>
     );
   }
