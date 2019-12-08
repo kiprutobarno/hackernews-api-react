@@ -7,7 +7,10 @@ class App extends Component {
   }
 
   setSearchTopStories = result => {
-    this.setState({ result });
+    const { hits, page } = result;
+    const oldHits = page !== 0 ? this.state.result.hits : [];
+    const updatedHits = [...oldHits, ...hits];
+    this.setState({ result: { hits: updatedHits, page } });
   };
 
   /**Dismiss expression to delete a list item */
@@ -25,8 +28,8 @@ class App extends Component {
     this.setState({ searchTerm: event.target.value });
   };
 
-  fetchSearchTopStories = searchTerm => {
-    const url = `https://hn.algolia.com/api/v1/search?query=${searchTerm}`;
+  fetchSearchTopStories = (searchTerm, page = 0) => {
+    const url = `https://hn.algolia.com/api/v1/search?query=${searchTerm}&page=${page}&hitsPerPage=${100}`;
     fetch(url)
       .then(response => response.json())
       .then(result => this.setSearchTopStories(result))
@@ -44,10 +47,11 @@ class App extends Component {
   }
   render() {
     const { searchTerm, result } = this.state;
+    const page = (result && result.page) || 0;
 
     return (
       <div className="App">
-        <div className="interaction">
+        <div className="interactions">
           <Search
             value={searchTerm}
             onSearchChange={this.onSearchChange}
@@ -62,6 +66,13 @@ class App extends Component {
             onDismiss={this.onDismiss}
           />
         )}
+        <div className="interactions">
+          <Button
+            onClick={() => this.fetchSearchTopStories(searchTerm, page + 1)}
+          >
+            More
+          </Button>
+        </div>
       </div>
     );
   }
