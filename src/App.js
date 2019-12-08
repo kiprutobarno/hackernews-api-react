@@ -1,13 +1,9 @@
 import React, { Component } from "react";
 
-/**Search function that returns ONLY the searched term in the list */
-const isSearched = searchTerm => item =>
-  item.title.toLowerCase().includes(searchTerm.toLowerCase());
-
 class App extends Component {
   constructor(props) {
     super(props);
-    this.state = { result: null, searchTerm: "javascript" };
+    this.state = { result: null, searchTerm: "" };
   }
 
   setSearchTopStories = result => {
@@ -28,26 +24,44 @@ class App extends Component {
   onSearchChange = event => {
     this.setState({ searchTerm: event.target.value });
   };
-  componentDidMount() {
-    const { searchTerm } = this.state;
+
+  fetchSearchTopStories = searchTerm => {
     const url = `https://hn.algolia.com/api/v1/search?query=${searchTerm}`;
     fetch(url)
       .then(response => response.json())
       .then(result => this.setSearchTopStories(result))
       .catch(error => error);
+  };
+  onSearchSubmit = event => {
+    const { searchTerm } = this.state;
+    this.fetchSearchTopStories(searchTerm);
+    event.preventDefault();
+  };
+
+  componentDidMount() {
+    const { searchTerm } = this.state;
+    this.fetchSearchTopStories(searchTerm);
   }
   render() {
     const { searchTerm, result } = this.state;
-    
+
     return (
       <div className="App">
-        <Search searchTerm={searchTerm} onSearchChange={this.onSearchChange} />
-        {result && <Table
-          searchTerm={searchTerm}
-          list={result.hits}
-          onDismiss={this.onDismiss}
-        />}
-        
+        <div className="interaction">
+          <Search
+            value={searchTerm}
+            onSearchChange={this.onSearchChange}
+            onSubmit={this.onSearchSubmit}
+          />
+        </div>
+
+        {result && (
+          <Table
+            searchTerm={searchTerm}
+            list={result.hits}
+            onDismiss={this.onDismiss}
+          />
+        )}
       </div>
     );
   }
@@ -55,15 +69,12 @@ class App extends Component {
 
 class Search extends Component {
   render() {
-    const { searchTerm, onSearchChange } = this.props;
+    const { value, onSearchChange, onSubmit } = this.props;
     return (
       <div className="form">
-        <form>
-          <input
-            type="text"
-            onChange={onSearchChange}
-            value={searchTerm}
-          ></input>
+        <form onSubmit={onSubmit}>
+          <input type="text" onChange={onSearchChange} value={value}></input>
+          <button type="submit">Search</button>
         </form>
       </div>
     );
@@ -106,10 +117,10 @@ class TableHead extends Component {
 
 class TableBody extends Component {
   render() {
-    const { searchTerm, list, onDismiss } = this.props;
+    const { list, onDismiss } = this.props;
     return (
       <tbody>
-        {list.filter(isSearched(searchTerm)).map(item => {
+        {list.map(item => {
           return (
             <tr key={item.objectID}>
               <td>{item.objectID}</td>
