@@ -63,3 +63,79 @@ exports[`Search has a valid snapshot 1`] = `
   </form>
 </div>
 `;
+
+exports[`Table has a valid snapshot 1`] = `
+<div
+  className="table"
+>
+  <table>
+    <thead>
+      <tr>
+        <th>
+          ID
+        </th>
+        <th>
+          Title
+        </th>
+        <th>
+          Author
+        </th>
+        <th>
+          Comments
+        </th>
+        <th>
+          Points
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>
+          B
+        </td>
+        <td>
+          Metaphysics
+        </td>
+        <td>
+          Barno
+        </td>
+        <td>
+          6
+        </td>
+        <td />
+        <td>
+          <button
+            onClick={[Function]}
+            type="button"
+          >
+            Dismiss
+          </button>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          X
+        </td>
+        <td>
+          Biosystems
+        </td>
+        <td>
+          Kimberly
+        </td>
+        <td>
+          2
+        </td>
+        <td />
+        <td>
+          <button
+            onClick={[Function]}
+            type="button"
+          >
+            Dismiss
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+`;
