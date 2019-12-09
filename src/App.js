@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import axios from "axios";
 
 class App extends Component {
+  _isMounted = false;
   constructor(props) {
     super(props);
     this.state = { result: null, searchTerm: "" };
@@ -32,8 +33,8 @@ class App extends Component {
   fetchSearchTopStories = (searchTerm, page = 0) => {
     const url = `https://hn.algolia.com/api/v1/search?query=${searchTerm}&page=${page}&hitsPerPage=${100}`;
     axios(url)
-      .then(result => this.setSearchTopStories(result.data))
-      .catch(error => error);
+      .then(result => this._isMounted && this.setSearchTopStories(result.data))
+      .catch(error => this._isMounted && error);
   };
   onSearchSubmit = event => {
     const { searchTerm } = this.state;
@@ -42,8 +43,12 @@ class App extends Component {
   };
 
   componentDidMount() {
+    this._isMounted = true;
     const { searchTerm } = this.state;
     this.fetchSearchTopStories(searchTerm);
+  }
+  componentWillUnmount() {
+    this._isMounted = false;
   }
   render() {
     const { searchTerm, result } = this.state;
@@ -164,3 +169,4 @@ class Button extends Component {
 }
 
 export default App;
+export { Button, Search, Table };
