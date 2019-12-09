@@ -140,7 +140,9 @@ class TableBody extends Component {
           return (
             <tr key={item.objectID}>
               <td>{item.objectID}</td>
-              <td>{item.title}</td>
+              <td>
+                <a href={item.url}>{item.title}</a>
+              </td>
               <td>{item.author}</td>
               <td>{item.num_comments}</td>
               <td>{item.points}</td>

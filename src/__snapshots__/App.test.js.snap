@@ -94,7 +94,9 @@ exports[`Table has a valid snapshot 1`] = `
           B
         </td>
         <td>
-          Metaphysics
+          <a>
+            Metaphysics
+          </a>
         </td>
         <td>
           Barno
@@ -117,7 +119,9 @@ exports[`Table has a valid snapshot 1`] = `
           X
         </td>
         <td>
-          Biosystems
+          <a>
+            Biosystems
+          </a>
         </td>
         <td>
           Kimberly
