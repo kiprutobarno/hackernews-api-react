@@ -38,3 +38,20 @@ exports[`App has valid snapshot 1`] = `
   </div>
 </div>
 `;
+
+exports[`Search has a valid snapshot 1`] = `
+<div
+  className="form"
+>
+  <form>
+    <input
+      type="text"
+    />
+    <button
+      type="submit"
+    >
+      Search
+    </button>
+  </form>
+</div>
+`;
